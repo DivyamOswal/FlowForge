@@ -4,6 +4,7 @@ import type {NextFunction, Response, Request} from "express"
 import cors from "cors"
 import session from "cookie-session"
 import {config} from "./config/app.config.js"
+import connectDatabase from "./config/database.config.js"
 
 const app = express()
 const BASE_PATH = config.BASE_PATH;
@@ -30,4 +31,5 @@ app.get('/', (req: Request, res:Response, next:NextFunction)=>{
 
 app.listen(config.PORT, async()=>{
     console.log(`Server running on port ${config.PORT} in ${config.NODE_ENV}`)
+    await connectDatabase()
 })
