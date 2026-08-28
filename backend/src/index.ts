@@ -5,6 +5,9 @@ import cors from "cors"
 import session from "cookie-session"
 import {config} from "./config/app.config.js"
 import connectDatabase from "./config/database.config.js"
+import { HTTPSTATUS } from "./config/http.config.js"
+import { asyncHandler } from "./middlewares/asyncHandler.middleware.js"
+import { errorHandler } from "./middlewares/errorHandler.middleware.js"
 
 const app = express()
 const BASE_PATH = config.BASE_PATH;
@@ -23,11 +26,14 @@ app.use(
     })
 )
 
-app.get('/', (req: Request, res:Response, next:NextFunction)=>{
-    res.status(200).json({
+app.get('/', asyncHandler (async(req: Request, res:Response, next:NextFunction)=>{
+    res.status(HTTPSTATUS.OK).json({
         message: "Hello Hi, my name is Divyam"
     })
 })
+)
+
+app.use(errorHandler)
 
 app.listen(config.PORT, async()=>{
     console.log(`Server running on port ${config.PORT} in ${config.NODE_ENV}`)
