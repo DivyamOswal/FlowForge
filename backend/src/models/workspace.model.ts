@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { generateInviteCode } from "../utils/uuid.js";
 
 export interface WorkspaceDocument extends Document {
     name: string
@@ -8,7 +9,7 @@ export interface WorkspaceDocument extends Document {
     createdAt: string
     updatedAt: string
 }
-const WorkspaceSchema = new <WorkspaceDocument>({
+const workspaceSchema = new <WorkspaceDocument>({
     name: {type: String, required: true, trim: true},
     description: {type: String, required: false},
     owner: {
@@ -22,4 +23,15 @@ const WorkspaceSchema = new <WorkspaceDocument>({
         unique: true,
         default: generateInviteCode
     }
-})
+},{timestamps: true})
+
+workspaceSchema.methods.resetInviteCode = function (){
+    this.inviteCode = generateInviteCode()
+}
+
+const WorkspaceModel = mongoose.model<WorkspaceDocument>(
+    "Workspace", workspaceSchema
+)
+
+export default WorkspaceModel
+
